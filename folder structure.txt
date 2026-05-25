@@ -1,0 +1,59 @@
+backend/
+ ├── src/main/java/com/mis
+ │
+ ├── auth/
+ ├── user/
+ ├── report/
+ ├── dashboard/
+ ├── analytics/
+ ├── upload/
+ ├── notification/
+ ├── common/
+ ├── config/
+ ├── security/
+ ├── exception/
+ ├── websocket/
+ ├── scheduler/
+ ├── cache/
+ └── util/
+
+
+
+ frontend/
+ ├── src/
+ │
+ ├── api/
+ ├── components/
+ ├── pages/
+ ├── layouts/
+ ├── hooks/
+ ├── store/
+ ├── services/
+ ├── features/
+ ├── routes/
+ ├── utils/
+ ├── types/
+ └── websocket/
+
+
+
+
+ Spring Initializr
+
+Choose:
+
+Project: Maven
+Language: Java
+Spring Boot: Latest stable
+Java: 21
+
+Dependencies:
+
+Spring Web
+Spring Data JPA
+PostgreSQL Driver
+Spring Security
+Validation
+Lombok
+Spring Boot DevTools
+JWT (later manually)
