@@ -21,6 +21,8 @@ public class StudentFilterDTO {
 
     private String student_name;
 
+    private Integer semester;
+
     private Integer page;
 
     private Integer size;

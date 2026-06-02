@@ -12,6 +12,14 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class StudentService {
+    
+        private String clean(String value){
+
+                if (value == null || value.isBlank()){
+                        return null;
+                }      
+                return value.toLowerCase() + "%";          
+        }
 
 
     private final StudentRepository studentRepository;
@@ -43,13 +51,15 @@ public class StudentService {
 
         return studentRepository.searchStudents(
 
-                dto.getStudent_name(),
+                clean(dto.getStudent_name()),
 
                 dto.getStudent_roll_no(),
 
                 dto.getDepartment_id(),
 
                 dto.getCourse_id(),
+
+                dto.getSemester(),
 
                 pageable
         );

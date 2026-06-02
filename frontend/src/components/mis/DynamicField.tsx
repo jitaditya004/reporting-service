@@ -65,7 +65,9 @@ export default function DynamicField({
       type={
         field.type === "date"
           ? "date"
-          : "text"
+          : field.type === "number"
+            ? "number"
+            : "text"
       }
       value={value}
       onChange={(e) =>

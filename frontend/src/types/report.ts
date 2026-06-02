@@ -18,7 +18,8 @@ export type InputFilter = {
   type:
     | "textbox"
     | "dropdown"
-    | "date";
+    | "date"
+    | "number";
 
 
   options?: FilterOption[];

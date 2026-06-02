@@ -15,44 +15,81 @@ public interface StudentRepository extends
 
 
     @Query("""
-        SELECT new com.mis.student.dto.StudentResponseDTO(
-            s.studentRollNo,
-            s.studentName,
-            d.departmentName,
-            c.courseName,
-            s.marks
-        )
-        FROM Student s
-        LEFT JOIN Department d
-            ON s.departmentId = d.departmentId
-        LEFT JOIN Course c
-            ON s.courseId = c.courseId
-        WHERE
-            (:studentName IS NULL OR 
-             LOWER(s.studentName) LIKE LOWER(CONCAT('%', :studentName, '%')))
-        AND
-            (:studentRollNo IS NULL OR
-             s.studentRollNo = :studentRollNo)
-        AND
-            (:departmentId IS NULL OR
-             s.departmentId = :departmentId)
-        AND
-            (:courseId IS NULL OR
-             s.courseId = :courseId)
-    """)
-    Page<StudentResponseDTO> searchStudents(
-            @Param("studentName")
-            String studentName,
+            SELECT new com.mis.student.dto.StudentResponseDTO(
 
-            @Param("studentRollNo")
-            String studentRollNo,
+                s.studentRollNo,
 
-            @Param("departmentId")
-            Long departmentId,
+                s.studentName,
 
-            @Param("courseId")
-            Long courseId,
+                d.departmentName,
 
-            Pageable pageable
-    );
+                c.courseName,
+
+                s.semester,
+
+                s.marks,
+
+                s.attendancePercentage,
+
+                s.admissionDatetime
+            )
+
+            FROM Student s
+
+            LEFT JOIN Department d
+                ON s.departmentId = d.departmentId
+
+            LEFT JOIN Course c
+                ON s.courseId = c.courseId
+
+            WHERE
+
+            (
+                :studentName IS NULL
+                OR LOWER(s.studentName)
+                LIKE :studentName
+            )
+
+            AND
+            (
+                :studentRollNo IS NULL
+                OR s.studentRollNo = :studentRollNo
+            )
+
+            AND
+            (
+                :departmentId IS NULL
+                OR s.departmentId = :departmentId
+            )
+
+            AND
+            (
+                :courseId IS NULL
+                OR s.courseId = :courseId
+            )
+
+            AND
+            (
+                :semester IS NULL
+                OR s.semester = :semester
+            )
+        """)
+        Page<StudentResponseDTO> searchStudents(
+                @Param("studentName")
+                String studentName,
+
+                @Param("studentRollNo")
+                String studentRollNo,
+
+                @Param("departmentId")
+                Long departmentId,
+
+                @Param("courseId")
+                Long courseId,
+
+                @Param("semester")
+                Integer semester,
+
+                Pageable pageable
+        );
 }
