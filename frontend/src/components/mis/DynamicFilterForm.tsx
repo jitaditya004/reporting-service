@@ -2,14 +2,17 @@ import DynamicField from "./DynamicField";
 
 import type {
   DynamicReport,
+  FilterValue
 } from "../../types/report";
 
+
+
 type Props = {
-  filters: Record<string, string>;
+  filters: Record<string, FilterValue>;
 
   setFilters: React.Dispatch<
     React.SetStateAction<
-      Record<string, string>
+      Record<string, FilterValue>
     >
   >;
 
@@ -25,10 +28,7 @@ export default function DynamicFilterForm({
   onSearch,
 }: Props) {
 
-  function updateField(
-    name: string,
-    value: string
-  ) {
+  function updateField( name: string, value: FilterValue) {
 
     setFilters((prev) => ({
       ...prev,

@@ -65,9 +65,9 @@ export default function ResultTable({
                   className="px-6 py-4"
                 >
                   {
-                    String(
-                      row[column.column]
-                    )
+                    row[column.column] 
+                      ? String(row[column.column])
+                      : "-"
                   }
                 </td>
 

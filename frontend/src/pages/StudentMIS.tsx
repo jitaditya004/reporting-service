@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
+
+import { getReport } from "../api/dynamic_reportApi";
 
 import DynamicFilterForm
 from "../components/mis/DynamicFilterForm";
@@ -6,43 +8,83 @@ from "../components/mis/DynamicFilterForm";
 import ResultTable
 from "../components/mis/ResultTable";
 
-import { dynamicReport }
-from "../data/mockReport";
-
 import type {
   StudentRecord,
+  DynamicReport
 } from "../types/report";
 
 import { searchStudents } from "../api/studentApi";
 
+type FilterValue = string | number;
+
 export default function StudentMIS() {
 
   const [filters, setFilters] =
-    useState<Record<string, string>>({});
+    useState<Record<string, FilterValue>>({});
 
   const [data, setData] =
     useState<StudentRecord[]>([]);
 
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
 
     const [error, setError] = useState<string | null>(null);
 
+    const [report, setReport] = useState<DynamicReport | null>(null);
+
+    useEffect(() => {
+      async function loadReport() {
+        try {
+          const data = await getReport(1);
+
+          setReport({
+            reportId: data.reportId,
+            reportName: data.reportName,
+
+            input_filters:
+              typeof data.inputFilters === "string"
+                ? JSON.parse(data.inputFilters)
+                : data.inputFilters,
+
+            output_columns:
+              typeof data.outputColumns === "string"
+                ? JSON.parse(data.outputColumns)
+                : data.outputColumns
+          });
+
+        } catch (error) {
+          console.error(error);
+          setError("Unable to load report config");
+        }
+      }
+
+      loadReport();
+
+    }, []);
+
     const handleSearch = async () => {
       try {
-        setLoading(true);
+        // setLoading(true);
         setError(null);
 
-        const response = await searchStudents(filters);
+        const response = await searchStudents({
+          ...filters,
+          page: "0",
+          size:"10"
+        });
 
-        setData(response);
+        setData(response.content);
       } catch (err) {
         console.error(err);
 
         setError("Failed to fetch student records");
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
+
+    if (!report) {
+      return <div>Loading report...</div>;
+    }
 
   return (
     <div>
@@ -62,7 +104,7 @@ export default function StudentMIS() {
       <DynamicFilterForm
         filters={filters}
         setFilters={setFilters}
-        config={dynamicReport}
+        config={report}
         onSearch={handleSearch}
       />
 
@@ -73,7 +115,7 @@ export default function StudentMIS() {
       )}
 
       <ResultTable
-        columns={dynamicReport.output_columns}
+        columns={report.output_columns}
         data={data}
       />
 

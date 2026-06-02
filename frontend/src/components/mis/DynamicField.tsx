@@ -1,17 +1,20 @@
 import type {
   InputFilter,
+  FilterValue
 } from "../../types/report";
 
 type Props = {
   field: InputFilter;
 
-  value: string;
+  value: FilterValue;
 
   onChange: (
     name: string,
-    value: string
+    value: FilterValue
   ) => void;
 };
+
+
 
 export default function DynamicField({
   field,
@@ -23,9 +26,10 @@ export default function DynamicField({
 
     return (
       <select
+        aria-label={field.label}
         value={value}
         onChange={(e) =>
-          onChange(field.name, e.target.value)
+          onChange(field.name,Number(e.target.value) || e.target.value)
         }
         className="
           bg-[#1f2937]
