@@ -71,7 +71,12 @@ export default function DynamicField({
       }
       value={value}
       onChange={(e) =>
-        onChange(field.name, e.target.value)
+          onChange(
+              field.name,
+              field.type === "number"
+                  ? Number(e.target.value)
+                  : e.target.value
+          )
       }
       placeholder={field.label}
       className="

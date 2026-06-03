@@ -15,9 +15,17 @@ import type {
 
 import { searchStudents } from "../api/studentApi";
 
+import Pagination from "../components/mis/Pagination";
+
 type FilterValue = string | number;
 
 export default function StudentMIS() {
+
+  const [page, setPage] = useState(0);
+
+  const [size, setSize] = useState(10);
+
+  const [totalPages, setTotalPages] = useState(0);
 
   const [filters, setFilters] =
     useState<Record<string, FilterValue>>({});
@@ -61,24 +69,39 @@ export default function StudentMIS() {
 
     }, []);
 
-    const handleSearch = async () => {
+    const handleSearch = async (
+      pageNumber = page
+    ) => {
+
       try {
-        // setLoading(true);
+
         setError(null);
 
-        const response = await searchStudents({
-          ...filters,
-          page: "0",
-          size:"10"
-        });
+        const response =
+          await searchStudents({
+
+            ...filters,
+
+            page: pageNumber,
+
+            size: size
+          });
+
 
         setData(response.content);
-      } catch (err) {
-        console.error(err);
 
-        setError("Failed to fetch student records");
-      } finally {
-        // setLoading(false);
+        setPage(response.number);
+
+        setTotalPages(response.totalPages);
+
+
+      } catch(error){
+
+        console.error(error);
+
+        setError(
+          "Failed to fetch student records"
+        );
       }
     };
 
@@ -118,6 +141,30 @@ export default function StudentMIS() {
         columns={report.output_columns}
         data={data}
       />
+
+      <Pagination
+
+      page={page}
+
+      size={size}
+
+      totalPages={totalPages}
+
+
+      onPageChange={(p)=>{
+
+          setPage(p);
+
+          handleSearch(p);
+      }}
+
+
+      onSizeChange={(newSize)=>{
+
+          setSize(newSize);
+
+          setPage(0);
+      }}/>
 
     </div>
   );

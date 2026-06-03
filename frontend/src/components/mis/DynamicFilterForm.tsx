@@ -18,7 +18,7 @@ type Props = {
 
   config: DynamicReport;
 
-  onSearch: () => void;
+  onSearch: () => Promise<void>;
 };
 
 export default function DynamicFilterForm({
@@ -91,7 +91,7 @@ export default function DynamicFilterForm({
       <div className="flex gap-4 mt-8">
 
         <button
-          onClick={onSearch}
+          onClick={()=>onSearch()}
           className="
             px-6
             py-3
