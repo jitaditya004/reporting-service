@@ -367,7 +367,7 @@ public class StudentService {
 
                                                 Sort.Order.asc("semester"),
 
-                                                Sort.Order.asc("studentRollNo"),
+                                                Sort.Order.asc("studentRollNo")
 
                                                 
 
