@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.mis.department.entity.Department;
+
 
 @Entity
 @Table(name = "student")
@@ -14,29 +18,45 @@ import java.time.LocalDateTime;
 @Builder
 public class Student {
 
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "student_id")
     private Long studentId;
+
+
 
     @Column(name = "student_roll_no")
     private String studentRollNo;
 
+
+
     @Column(name = "student_name")
     private String studentName;
 
-    @Column(name = "department_id")
-    private Long departmentId;
 
-    @Column(name = "course_id")
-    private Long courseId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+
 
     private Integer semester;
 
-    private Double marks;
 
-    @Column(name = "attendance_percentage")
-    private Double attendancePercentage;
 
     @Column(name = "admission_datetime")
     private LocalDateTime admissionDatetime;
+
+
+
+
+    @OneToMany(
+            mappedBy = "student",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private List<StudentCourse> courses;
+
 }

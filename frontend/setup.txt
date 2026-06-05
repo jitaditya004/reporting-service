@@ -15,3 +15,12 @@ export default defineConfig({
 index.css
 @import "tailwindcss";
 
+
+
+
+
+
+//pdf
+
+npm install jspdf jspdf-autotable
+

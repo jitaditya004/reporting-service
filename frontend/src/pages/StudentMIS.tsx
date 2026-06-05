@@ -70,7 +70,8 @@ export default function StudentMIS() {
     }, []);
 
     const handleSearch = async (
-      pageNumber = page
+      pageNumber = page,
+      pageSize = size
     ) => {
 
       try {
@@ -84,7 +85,7 @@ export default function StudentMIS() {
 
             page: pageNumber,
 
-            size: size
+            size: pageSize
           });
 
 
@@ -155,7 +156,7 @@ export default function StudentMIS() {
 
           setPage(p);
 
-          handleSearch(p);
+          handleSearch(p,size);
       }}
 
 
@@ -164,6 +165,8 @@ export default function StudentMIS() {
           setSize(newSize);
 
           setPage(0);
+
+          handleSearch(0,newSize);
       }}/>
 
     </div>

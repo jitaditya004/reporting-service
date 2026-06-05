@@ -103,3 +103,431 @@ CREATE TABLE dynamic_report (
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+
+
+
+CREATE TABLE student_course (
+
+    student_course_id SERIAL PRIMARY KEY,
+
+    student_id INT NOT NULL,
+
+    course_id INT NOT NULL,
+
+    marks NUMERIC(5,2),
+
+    attendance_percentage NUMERIC(5,2),
+
+
+    CONSTRAINT fk_sc_student
+    FOREIGN KEY(student_id)
+    REFERENCES student(student_id),
+
+
+    CONSTRAINT fk_sc_course
+    FOREIGN KEY(course_id)
+    REFERENCES course(course_id)
+
+);
+
+
+
+INSERT INTO student_course
+(
+    student_id,
+    course_id,
+    marks,
+    attendance_percentage
+)
+
+SELECT
+
+    student_id,
+    course_id,
+    marks,
+    attendance_percentage
+
+FROM student;
+
+
+ALTER TABLE student
+DROP COLUMN course_id;
+
+
+ALTER TABLE student
+DROP COLUMN marks;
+
+
+ALTER TABLE student
+DROP COLUMN attendance_percentage;
+
+
+INSERT INTO student_course
+(
+student_id,
+course_id,
+marks,
+attendance_percentage
+)
+VALUES
+(1,2,92,95),
+(1,3,85,90),
+(1,4,88,93);
+
+
+
+UPDATE dynamic_report
+
+SET query = '
+
+SELECT
+
+    s.student_roll_no,
+
+    s.student_name,
+
+    d.department_name,
+
+    c.course_name,
+
+    s.semester,
+
+
+    sc.marks,
+
+    sc.attendance_percentage,
+
+
+    s.admission_datetime
+
+
+FROM student s
+
+
+JOIN department d
+
+ON s.department_id = d.department_id
+
+
+
+JOIN student_course sc
+
+ON s.student_id = sc.student_id
+
+
+
+JOIN course c
+
+ON sc.course_id = c.course_id
+
+
+
+WHERE 1=1
+
+
+
+AND (
+
+    :from_date IS NULL
+
+    OR s.admission_datetime::date >= :from_date
+
+)
+
+
+
+AND (
+
+    :to_date IS NULL
+
+    OR s.admission_datetime::date <= :to_date
+
+)
+
+
+
+AND (
+
+    :department_id IS NULL
+
+    OR s.department_id = :department_id
+
+)
+
+
+
+AND (
+
+    :course_id IS NULL
+
+    OR c.course_id = :course_id
+
+)
+
+
+
+AND (
+
+    :student_name IS NULL
+
+    OR LOWER(s.student_name)
+
+       LIKE LOWER(''%'' || :student_name || ''%'')
+
+)
+
+
+
+AND (
+
+    :semester IS NULL
+
+    OR s.semester = :semester
+
+)
+
+
+
+ORDER BY s.admission_datetime DESC
+
+'
+
+WHERE report_id = 1;
+
+
+
+TRUNCATE TABLE dynamic_report
+RESTART IDENTITY;
+
+
+
+
+INSERT INTO dynamic_report
+(
+    report_name,
+    input_filters,
+    output_columns,
+    query
+)
+
+VALUES
+(
+
+'Student MIS Report',
+
+
+'[
+    {
+        "name": "from_date",
+        "label": "From Date",
+        "type": "date"
+    },
+
+    {
+        "name": "to_date",
+        "label": "To Date",
+        "type": "date"
+    },
+
+    {
+        "name": "department_id",
+        "label": "Department",
+        "type": "dropdown",
+
+        "dropdown_query":
+        "SELECT department_id AS value, department_name AS label FROM department ORDER BY department_name"
+    },
+
+
+    {
+        "name": "course_id",
+        "label": "Course",
+        "type": "dropdown",
+
+        "dropdown_query":
+        "SELECT course_id AS value, course_name AS label FROM course ORDER BY course_name"
+    },
+
+
+    {
+        "name": "student_name",
+        "label": "Student Name",
+        "type": "textbox"
+    },
+
+
+    {
+        "name": "semester",
+        "label": "Semester",
+        "type": "number"
+    }
+
+]'::jsonb,
+
+
+
+'[
+    {
+        "column":"student_roll_no",
+        "label":"Roll No"
+    },
+
+    {
+        "column":"student_name",
+        "label":"Student Name"
+    },
+
+    {
+        "column":"department_name",
+        "label":"Department"
+    },
+
+    {
+        "column":"course_name",
+        "label":"Subject"
+    },
+
+    {
+        "column":"semester",
+        "label":"Semester"
+    },
+
+    {
+        "column":"marks",
+        "label":"Marks"
+    },
+
+    {
+        "column":"attendance_percentage",
+        "label":"Attendance %"
+    },
+
+    {
+        "column":"admission_datetime",
+        "label":"Admission Date"
+    }
+
+]'::jsonb,
+
+
+
+'
+
+SELECT
+
+    s.student_roll_no,
+
+    s.student_name,
+
+    d.department_name,
+
+    c.course_name,
+
+    s.semester,
+
+
+    sc.marks,
+
+    sc.attendance_percentage,
+
+
+    s.admission_datetime
+
+
+
+FROM student s
+
+
+
+JOIN department d
+
+ON s.department_id = d.department_id
+
+
+
+JOIN student_course sc
+
+ON s.student_id = sc.student_id
+
+
+
+JOIN course c
+
+ON sc.course_id = c.course_id
+
+
+
+
+WHERE 1=1
+
+
+
+AND (
+
+    :from_date IS NULL
+
+    OR s.admission_datetime::date >= :from_date
+
+)
+
+
+
+AND (
+
+    :to_date IS NULL
+
+    OR s.admission_datetime::date <= :to_date
+
+)
+
+
+
+AND (
+
+    :department_id IS NULL
+
+    OR s.department_id = :department_id
+
+)
+
+
+
+AND (
+
+    :course_id IS NULL
+
+    OR sc.course_id = :course_id
+
+)
+
+
+
+AND (
+
+    :student_name IS NULL
+
+    OR LOWER(s.student_name)
+
+    LIKE LOWER(''%'' || :student_name || ''%'')
+
+)
+
+
+
+AND (
+
+    :semester IS NULL
+
+    OR s.semester = :semester
+
+)
+
+
+
+ORDER BY s.student_roll_no, c.course_name
+
+'
+
+);

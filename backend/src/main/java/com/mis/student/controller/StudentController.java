@@ -20,4 +20,73 @@ public class StudentController {
 
         return studentService.search(dto);
     }
+    
+
+     @PostMapping("/export/csv")
+        public ResponseEntity<byte[]> exportCSV(
+                @RequestBody StudentFilterDTO dto
+        ){
+
+
+            byte[] file =
+                    studentService.exportCSV(dto);
+
+
+
+            return ResponseEntity.ok()
+
+
+                    .header(
+                        "Content-Disposition",
+                        "attachment; filename=students.csv"
+                    )
+
+
+                    .header(
+                        "Content-Type",
+                        "text/csv"
+                    )
+
+
+                    .body(file);
+
+        }
+
+
+
+
+
+
+
+        @PostMapping("/export/pdf")
+        public ResponseEntity<byte[]> exportPDF(
+                @RequestBody StudentFilterDTO dto
+        ){
+
+
+            byte[] file =
+                    studentService.exportPDF(dto);
+
+
+
+            return ResponseEntity.ok()
+
+
+                    .header(
+                        "Content-Disposition",
+                        "attachment; filename=students.pdf"
+                    )
+
+
+                    .header(
+                        "Content-Type",
+                        "application/pdf"
+                    )
+
+
+                    .body(file);
+
+        }
+
+
 }
