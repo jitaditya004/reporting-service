@@ -9,129 +9,160 @@ type Props = {
 
   data: Record<string, unknown>[];
 
+
+  onExportCSV: () => Promise<void>;
+
+
+  onExportPDF: () => Promise<void>;
+
 };
+
 
 
 export default function ResultTable({
   columns,
   data,
+  onExportCSV,
+  onExportPDF,
 }: Props) {
 
 
   return (
 
-    <div
-      className="
-        max-h-[90vh]
-        overflow-auto
-
-        rounded-3xl
-
-        border
-        border-white/10
-
-        bg-white/5
-      "
-    >
+    <div>
 
 
-      <table
+      {
+        data.length > 0 && (
+
+          <div
+            className="
+              flex
+              justify-end
+              gap-3
+              mb-4
+            "
+          >
+
+
+            <button
+
+              onClick={onExportCSV}
+
+              className="
+                px-4
+                py-2
+
+                rounded-xl
+
+                bg-green-600
+                hover:bg-green-700
+
+                text-white
+                font-medium
+
+                transition
+              "
+            >
+
+              Export CSV
+
+            </button>
+
+
+
+
+
+            <button
+
+              onClick={onExportPDF}
+
+              className="
+                px-4
+                py-2
+
+                rounded-xl
+
+                bg-red-600
+                hover:bg-red-700
+
+                text-white
+                font-medium
+
+                transition
+              "
+            >
+
+              Export PDF
+
+            </button>
+
+
+          </div>
+        )
+      }
+
+
+
+
+
+      <div
         className="
-          w-full
-          min-w-max
-          text-left
+          max-h-[90vh]
+          overflow-auto
+
+          rounded-3xl
+
+          border
+          border-white/10
+
+          bg-white/5
         "
       >
 
 
-        <thead
+        <table
           className="
-            sticky
-            top-0
-            z-10
-
-            bg-gray-900
-            text-gray-400
+            w-full
+            min-w-max
+            text-left
           "
         >
 
-          <tr>
+
+          <thead
+            className="
+              sticky
+              top-0
+              z-10
+
+              bg-gray-900
+              text-gray-400
+            "
+          >
 
 
-            {columns.map((column) => (
+            <tr>
 
 
-              <th
-                key={column.column}
-
-                className="
-                  px-6
-                  py-4
-
-                  whitespace-nowrap
-                "
-              >
-
-                {column.label}
-
-              </th>
-
-            ))}
+              {columns.map((column)=>(
 
 
-          </tr>
-
-
-        </thead>
-
-
-
-
-        <tbody>
-
-
-          {data.map((row, index) => (
-
-
-            <tr
-
-              key={index}
-
-              className="
-                border-t
-                border-white/5
-
-                hover:bg-white/5
-              "
-            >
-
-
-              {columns.map((column) => (
-
-
-                <td
+                <th
 
                   key={column.column}
 
                   className="
                     px-6
                     py-4
-
                     whitespace-nowrap
-
-                    text-gray-200
                   "
+
                 >
 
-                  {
-                    row[column.column]
-                    ? String(row[column.column])
-                    : "-"
-                  }
+                  {column.label}
 
-
-                </td>
-
+                </th>
 
               ))}
 
@@ -139,13 +170,71 @@ export default function ResultTable({
             </tr>
 
 
-          ))}
+          </thead>
 
 
-        </tbody>
 
 
-      </table>
+          <tbody>
+
+
+            {data.map((row,index)=>(
+
+
+              <tr
+
+                key={index}
+
+                className="
+                  border-t
+                  border-white/5
+
+                  hover:bg-white/5
+                "
+              >
+
+
+                {columns.map((column)=>(
+
+
+                  <td
+
+                    key={column.column}
+
+                    className="
+                      px-6
+                      py-4
+
+                      whitespace-nowrap
+
+                      text-gray-200
+                    "
+                  >
+
+                    {
+                      row[column.column]
+                      ? String(row[column.column])
+                      : "-"
+                    }
+
+                  </td>
+
+
+                ))}
+
+
+              </tr>
+
+            ))}
+
+
+          </tbody>
+
+
+        </table>
+
+
+      </div>
 
 
     </div>

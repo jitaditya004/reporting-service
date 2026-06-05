@@ -21,7 +21,6 @@ public class StudentSpecification {
 
 
         return (root, query, cb) -> {
-            query.distinct(true);
 
             var predicate = cb.conjunction();
 

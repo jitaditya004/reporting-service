@@ -11,6 +11,19 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import java.io.*;
+import java.util.List;
+
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+
+
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Table;
 
 
 @Service
@@ -128,5 +141,339 @@ public class StudentService {
 
                 .build();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+       public byte[] exportCSV(
+                        StudentFilterDTO dto
+                ){
+
+
+                List<Student> students =
+                        studentRepository.findAll(
+
+                                StudentSpecification.filter(dto),
+
+                                Sort.by(
+
+                                        Sort.Order.asc("department.departmentName"),
+
+                                        Sort.Order.asc("semester"),
+
+                                        Sort.Order.asc("studentRollNo")
+
+                                )
+
+                        );
+
+
+
+                try {
+
+
+                        ByteArrayOutputStream output =
+                                new ByteArrayOutputStream();
+
+
+
+                        try (
+
+                        CSVPrinter printer =
+                                new CSVPrinter(
+
+
+                                        new PrintWriter(output),
+
+
+                                        CSVFormat.DEFAULT
+
+                                                .builder()
+
+                                                .setHeader(
+
+                                                        "Roll No",
+
+                                                        "Student Name",
+
+                                                        "Department",
+
+                                                        "Course",
+
+                                                        "Semester",
+
+                                                        "Marks",
+
+                                                        "Attendance"
+
+                                                )
+
+                                                .get()
+
+                                )
+
+                        ){
+
+
+
+
+
+                        for(Student student : students){
+
+
+
+                                for(StudentCourse sc :
+                                        student.getCourses()
+                                ){
+
+
+                                printer.printRecord(
+
+
+                                        student.getStudentRollNo(),
+
+
+                                        student.getStudentName(),
+
+
+
+                                        student
+                                        .getDepartment()
+                                        .getDepartmentName(),
+
+
+
+                                        sc.getCourse()
+                                        .getCourseName(),
+
+
+
+                                        student.getSemester(),
+
+
+
+                                        sc.getMarks(),
+
+
+
+                                        sc.getAttendancePercentage()
+
+                                );
+
+                                }
+
+                        }
+
+
+
+                        printer.flush();
+
+                        }
+
+
+
+
+                        return output.toByteArray();
+
+
+
+                }
+                catch(Exception e){
+
+                        throw new RuntimeException(e);
+
+                }
+
+        }
+
+
+
+
+
+
+
+
+
+
+        public byte[] exportPDF(
+                        StudentFilterDTO dto
+                ){
+
+
+                try {
+
+
+                        ByteArrayOutputStream output =
+                                new ByteArrayOutputStream();
+
+
+
+                        PdfWriter writer =
+                                new PdfWriter(output);
+
+
+
+                        PdfDocument pdf =
+                                new PdfDocument(writer);
+
+
+
+                        Document document =
+                                new Document(pdf);
+
+
+
+
+                        Table table =
+                                new Table(7);
+
+
+
+
+                        table.addCell("Roll No");
+
+                        table.addCell("Name");
+
+                        table.addCell("Department");
+
+                        table.addCell("Course");
+
+                        table.addCell("Semester");
+
+                        table.addCell("Marks");
+
+                        table.addCell("Attendance");
+
+
+
+
+
+                        List<Student> students =
+                                studentRepository.findAll(
+
+                                        StudentSpecification.filter(dto),
+
+                                        Sort.by(
+
+                                                Sort.Order.asc("department.departmentName"),
+
+                                                Sort.Order.asc("semester"),
+
+                                                Sort.Order.asc("studentRollNo"),
+
+                                                
+
+                                        )
+
+                                );
+
+
+
+
+
+                        for(Student student : students){
+
+
+
+                        for(StudentCourse sc :
+                                student.getCourses()
+                        ){
+
+
+
+                                table.addCell(
+                                        student.getStudentRollNo()
+                                );
+
+
+
+                                table.addCell(
+                                        student.getStudentName()
+                                );
+
+
+
+                                table.addCell(
+
+                                        student
+                                        .getDepartment()
+                                        .getDepartmentName()
+
+                                );
+
+
+
+                                table.addCell(
+
+                                        sc
+                                        .getCourse()
+                                        .getCourseName()
+
+                                );
+
+
+
+                                table.addCell(
+
+                                        String.valueOf(
+                                                student.getSemester()
+                                        )
+
+                                );
+
+
+
+                                table.addCell(
+
+                                        String.valueOf(
+                                                sc.getMarks()
+                                        )
+
+                                );
+
+
+
+                                table.addCell(
+
+                                        String.valueOf(
+                                                sc.getAttendancePercentage()
+                                        )
+
+                                );
+
+
+                        }
+
+                        }
+
+
+
+
+                        document.add(table);
+
+
+                        document.close();
+
+
+
+                        return output.toByteArray();
+
+
+                }
+                catch(Exception e){
+
+                        throw new RuntimeException(e);
+
+                }
+
+        }
 
 }

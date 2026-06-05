@@ -13,7 +13,7 @@ import type {
   DynamicReport
 } from "../types/report";
 
-import { searchStudents } from "../api/studentApi";
+import { searchStudents, exportStudentCSV, exportStudentPDF } from "../api/studentApi";
 
 import Pagination from "../components/mis/Pagination";
 
@@ -141,6 +141,8 @@ export default function StudentMIS() {
       <ResultTable
         columns={report.output_columns}
         data={data}
+        onExportCSV={()=>exportStudentCSV(filters)}
+        onExportPDF={()=>exportStudentPDF(filters)}
       />
 
       <Pagination
