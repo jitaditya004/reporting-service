@@ -110,155 +110,62 @@ export default function StudentMIS() {
 
 
     useEffect(() => {
-
+      let timer: ReturnType<typeof setTimeout>;
 
       async function loadReport() {
-
-
-        if(
-          retryCount.current >= MAX_RETRIES
-        ){
-
-          setError(
-            "Unable to load report. Please try again later."
-          );
-
-          return;
-
-        }
-
-
-
         try {
-
-
           setLoadingReport(true);
 
+          const data = await getReport(1);
 
+          setReport({
+            reportId: data.reportId,
+            reportName: data.reportName,
 
-          const data =
-            await getReport(1);
-
-
-
-
-          setReport(prev => {
-
-
-            if(prev){
-
-              return prev;
-
-            }
-
-
-            return {
-
-
-              reportId:
-                data.reportId,
-
-
-              reportName:
-                data.reportName,
-
-
-              input_filters:
-
-                typeof data.inputFilters === "string"
-
+            input_filters:
+              typeof data.inputFilters === "string"
                 ? JSON.parse(data.inputFilters)
-
                 : data.inputFilters,
 
-
-
-              output_columns:
-
-                typeof data.outputColumns === "string"
-
+            output_columns:
+              typeof data.outputColumns === "string"
                 ? JSON.parse(data.outputColumns)
-
                 : data.outputColumns
-
-            };
-
           });
 
-
-
           setError(null);
-
-
-          retryCount.current = 0;
-
-
-        }
-        catch(error){
-
-
+        } 
+        catch (error) {
           console.error(error);
-
-
 
           retryCount.current += 1;
 
+          if (retryCount.current < MAX_RETRIES) {
+            setError(
+              `Retrying ${retryCount.current}/${MAX_RETRIES}`
+            );
 
-
-          setError(
-
-            `Unable to load report. Retrying ${retryCount.current}/${MAX_RETRIES}`
-
-          );
-
-
+            timer = setTimeout(
+              loadReport,
+              5000
+            );
+          } 
+          else {
+            setError(
+              "Unable to load report. Please try again later."
+            );
+          }
         }
-        finally{
-
-
+        finally {
           setLoadingReport(false);
-
-
         }
-
-
       }
-
-
-
 
       loadReport();
 
-
-
-
-      const interval =
-        setInterval(() => {
-
-
-          if(
-            retryCount.current < MAX_RETRIES
-          ){
-
-            loadReport();
-
-          }
-
-
-        },5000);
-
-
-
-
-
       return () => {
-
-
-        clearInterval(interval);
-
-
+        clearTimeout(timer);
       };
-
 
     }, []);
 
