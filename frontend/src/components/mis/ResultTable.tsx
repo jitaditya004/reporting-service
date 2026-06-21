@@ -205,6 +205,7 @@
 //   );
 // }
 
+import { useState } from "react";
 import type { OutputColumn } from "../../types/report";
 
 type Props = {
@@ -221,12 +222,36 @@ export default function ResultTable({
   onExportCSV,
   onExportPDF,
 }: Props) {
+  const [csvLoading, setCsvLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
+
+  async function handleCSVExport() {
+    try {
+      setCsvLoading(true);
+
+      await onExportCSV();
+    } finally {
+      setCsvLoading(false);
+    }
+  }
+
+  async function handlePDFExport() {
+    try {
+      setPdfLoading(true);
+
+      await onExportPDF();
+    } finally {
+      setPdfLoading(false);
+    }
+  }
+
   return (
     <div>
       {data.length > 0 && (
         <div className="flex justify-end gap-3 mb-4">
           <button
-            onClick={onExportCSV}
+            disabled={csvLoading}
+            onClick={handleCSVExport}
             className="
               px-4 py-2
               rounded-xl
@@ -235,11 +260,12 @@ export default function ResultTable({
               transition
             "
           >
-            Export CSV
+            {csvLoading ? "Exporting..." : "Export CSV"}
           </button>
 
           <button
-            onClick={onExportPDF}
+            disabled={pdfLoading}
+            onClick={handlePDFExport}
             className="
               px-4 py-2
               rounded-xl
@@ -248,7 +274,7 @@ export default function ResultTable({
               transition
             "
           >
-            Export PDF
+            {pdfLoading ? "Exporting..." : "Export PDF"}
           </button>
         </div>
       )}
