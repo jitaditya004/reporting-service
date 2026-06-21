@@ -11,12 +11,18 @@ spring:
       maximum-pool-size: 5
       minimum-idle: 0
 
+  # Flyway handles database schema changes
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  # Hibernate only validates entities vs database
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: validate
 
-    
+    show-sql: true
 
   servlet:
     multipart:
