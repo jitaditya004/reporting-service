@@ -239,6 +239,153 @@ ORDER BY s.admission_datetime DESC
 );
 
 
+INSERT INTO dynamic_report
+(
+    report_name,
+    input_filters,
+    output_columns,
+    query
+)
+
+VALUES
+(
+
+'Student Basic MIS Report',
+
+'
+[
+    {
+        "name": "student_name",
+        "label": "Student Name",
+        "type": "textbox"
+    },
+
+    {
+        "name": "department_id",
+        "label": "Department",
+        "type": "dropdown",
+
+        "dropdown_query":
+        "SELECT department_id AS value, department_name AS label FROM department ORDER BY department_name"
+    },
+
+    {
+        "name": "course_id",
+        "label": "Course",
+        "type": "dropdown",
+
+        "dropdown_query":
+        "SELECT course_id AS value, course_name AS label FROM course ORDER BY course_name"
+    },
+
+    {
+        "name": "semester",
+        "label": "Semester",
+        "type": "number"
+    }
+
+]'::jsonb,
+
+'
+[
+    {
+        "column": "student_roll_no",
+        "label": "Roll No"
+    },
+
+    {
+        "column": "student_name",
+        "label": "Student Name"
+    },
+
+    {
+        "column": "department_name",
+        "label": "Department"
+    },
+
+    {
+        "column": "course_name",
+        "label": "Course"
+    },
+
+    {
+        "column": "semester",
+        "label": "Semester"
+    },
+
+    {
+        "column": "marks",
+        "label": "Marks"
+    },
+
+    {
+        "column": "attendance_percentage",
+        "label": "Attendance %"
+    },
+
+    {
+        "column": "admission_datetime",
+        "label": "Admission Date"
+    }
+
+]'::jsonb,
+
+'
+
+SELECT
+
+    s.student_roll_no,
+    s.student_name,
+    d.department_name,
+    c.course_name,
+    s.semester,
+    s.marks,
+    s.attendance_percentage,
+    s.admission_datetime
+
+FROM student s
+
+JOIN department d
+    ON s.department_id = d.department_id
+
+JOIN course c
+    ON s.course_id = c.course_id
+
+WHERE 1=1
+
+
+AND (
+    :student_name IS NULL
+    OR LOWER(s.student_name)
+       LIKE LOWER(''%'' || :student_name || ''%'')
+)
+
+
+AND (
+    :department_id IS NULL
+    OR s.department_id = :department_id
+)
+
+
+AND (
+    :course_id IS NULL
+    OR s.course_id = :course_id
+)
+
+
+AND (
+    :semester IS NULL
+    OR s.semester = :semester
+)
+
+
+ORDER BY s.admission_datetime DESC
+
+'
+
+);
+
+
 
 
 
