@@ -1,20 +1,11 @@
 import DynamicField from "./DynamicField";
 
-import type {
-  DynamicReport,
-  FilterValue
-} from "../../types/report";
-
-
+import type { DynamicReport, FilterValue } from "../../types/report";
 
 type Props = {
   filters: Record<string, FilterValue>;
 
-  setFilters: React.Dispatch<
-    React.SetStateAction<
-      Record<string, FilterValue>
-    >
-  >;
+  setFilters: React.Dispatch<React.SetStateAction<Record<string, FilterValue>>>;
 
   config: DynamicReport;
 
@@ -27,35 +18,20 @@ export default function DynamicFilterForm({
   config,
   onSearch,
 }: Props) {
+  function updateField(name: string, value: FilterValue) {
+    setFilters((prev) => {
+      const updated = {
+        ...prev,
+      };
 
-  function updateField(
-      name:string,
-      value:FilterValue
-  ){
+      if (value === "") {
+        delete updated[name];
+      } else {
+        updated[name] = value;
+      }
 
-      setFilters((prev)=>{
-
-
-          const updated = {
-              ...prev
-          };
-
-
-          if(value === ""){
-
-              delete updated[name];
-
-          }
-          else{
-
-              updated[name]=value;
-
-          }
-
-
-          return updated;
-
-      });
+      return updated;
+    });
   }
 
   return (
@@ -69,10 +45,7 @@ export default function DynamicFilterForm({
         mb-8
       "
     >
-
-      <h2 className="text-3xl font-bold mb-6">
-        Student MIS
-      </h2>
+      <h2 className="text-3xl font-bold mb-6">Student MIS</h2>
 
       <div
         className="
@@ -83,11 +56,8 @@ export default function DynamicFilterForm({
           gap-6
         "
       >
-
         {config.input_filters.map((field) => (
-
           <div key={field.name}>
-
             <label
               className="
                 block
@@ -104,16 +74,13 @@ export default function DynamicFilterForm({
               value={filters[field.name] || ""}
               onChange={updateField}
             />
-
           </div>
         ))}
-
       </div>
 
       <div className="flex gap-4 mt-8">
-
         <button
-          onClick={()=>onSearch()}
+          onClick={() => onSearch()}
           className="
             px-6
             py-3
@@ -127,11 +94,7 @@ export default function DynamicFilterForm({
         </button>
 
         <button
-
-          onClick={() =>
-            setFilters({})
-          }
-
+          onClick={() => setFilters({})}
           className="
             px-6
             py-3
@@ -140,13 +103,9 @@ export default function DynamicFilterForm({
             hover:bg-red-500
           "
         >
-
-        Clear
-
+          Clear
         </button>
-
       </div>
-
     </div>
   );
 }

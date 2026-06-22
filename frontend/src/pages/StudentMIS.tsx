@@ -133,6 +133,12 @@ export default function StudentMIS() {
     }
   };
 
+  const handleNewSearch = async () => {
+    setPage(0);
+
+    await handleSearch(0, size);
+  };
+
   if (!report) {
     return (
       <div
@@ -186,7 +192,7 @@ export default function StudentMIS() {
         filters={filters}
         setFilters={setFilters}
         config={report}
-        onSearch={handleSearch}
+        onSearch={handleNewSearch}
       />
 
       {error && (
