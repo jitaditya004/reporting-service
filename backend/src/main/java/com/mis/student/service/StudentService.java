@@ -12,9 +12,9 @@ import com.mis.student.dto.*;
 import com.mis.student.entity.Student;
 import com.mis.student.entity.StudentCourse;
 import com.mis.student.repository.StudentCourseRepository;
-import com.mis.student.repository.StudentRepository;
+// import com.mis.student.repository.StudentRepository;
 import com.mis.student.specification.StudentCourseSpecification;
-import com.mis.student.specification.StudentSpecification;
+// import com.mis.student.specification.StudentSpecification;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,21 +32,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentService {
 
-    private final StudentRepository studentRepository;
+    // private final StudentRepository studentRepository;
     private final StudentCourseRepository studentCourseRepository;
 
-    private void sortStudents(List<Student> students) {
-        students.sort(
+    private void sortRecords(
+        List<StudentCourse> records
+    ) {
+
+        records.sort(
             Comparator
-                .comparing((Student s) -> s.getDepartment().getDepartmentName())
-                .thenComparing(Student::getSemester)
-                .thenComparing(Student::getStudentRollNo)
+
+                .comparing(
+                    (StudentCourse sc) ->
+                        sc.getStudent()
+                            .getDepartment()
+                            .getDepartmentName()
+                )
+
                 .thenComparing(
-                    s -> s.getCourses()
-                        .stream()
-                        .map(StudentCourse::getMarks)
-                        .max(Double::compareTo)
-                        .orElse(0.0),
+                    sc ->
+                        sc.getStudent()
+                            .getSemester()
+                )
+
+                .thenComparing(
+                    sc ->
+                        sc.getStudent()
+                            .getStudentRollNo()
+                )
+
+                .thenComparing(
+                    StudentCourse::getMarks,
                     Comparator.reverseOrder()
                 )
         );
@@ -120,7 +136,8 @@ public class StudentService {
                 ),
                 Sort.Order.asc(
                     "student.studentRollNo"
-                )
+                ),
+                Sort.Order.desc("marks")
             )
         );
 
@@ -174,11 +191,11 @@ public class StudentService {
 
         try {
 
-            List<Student> students = studentRepository.findAll(
-                StudentSpecification.filter(dto)
+            List<StudentCourse> records = studentCourseRepository.findAll(
+                StudentCourseSpecification.filter(dto)
             );
 
-            sortStudents(students);
+            sortRecords(records);
 
             ByteArrayOutputStream output = new ByteArrayOutputStream();
 
@@ -199,20 +216,19 @@ public class StudentService {
                 )
             ) {
 
-                for (Student student : students) {
-
-                    for (StudentCourse sc : student.getCourses()) {
-
-                        printer.printRecord(
-                            student.getStudentRollNo(),
-                            student.getStudentName(),
-                            student.getDepartment().getDepartmentName(),
-                            sc.getCourse().getCourseName(),
-                            student.getSemester(),
-                            sc.getMarks(),
-                            sc.getAttendancePercentage()
-                        );
-                    }
+                for (StudentCourse sc : records) {
+                    Student student = sc.getStudent();
+                
+                    printer.printRecord(
+                        student.getStudentRollNo(),
+                        student.getStudentName(),
+                        student.getDepartment().getDepartmentName(),
+                        sc.getCourse().getCourseName(),
+                        student.getSemester(),
+                        sc.getMarks(),
+                        sc.getAttendancePercentage()
+                    );
+                    
                 }
 
                 printer.flush();
@@ -229,11 +245,12 @@ public class StudentService {
 
         try {
 
-            List<Student> students = studentRepository.findAll(
-                StudentSpecification.filter(dto)
-            );
+            List<StudentCourse> records =
+                studentCourseRepository.findAll(
+                    StudentCourseSpecification.filter(dto)
+                );
 
-            sortStudents(students);
+            sortRecords(records);
 
             ByteArrayOutputStream output = new ByteArrayOutputStream();
 
@@ -257,9 +274,9 @@ public class StudentService {
                 table.addCell(h);
             }
 
-            for (Student student : students) {
+            for (StudentCourse sc : records) {
 
-                for (StudentCourse sc : student.getCourses()) {
+                    Student student =sc.getStudent();
 
                     table.addCell(student.getStudentRollNo());
                     table.addCell(student.getStudentName());
@@ -283,7 +300,7 @@ public class StudentService {
                     table.addCell(
                         String.valueOf(sc.getAttendancePercentage())
                     );
-                }
+                
             }
 
             document.add(table);

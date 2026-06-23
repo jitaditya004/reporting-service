@@ -38,12 +38,14 @@ export default function ResultTable({
     }
   }
 
+  const exporting = csvLoading || pdfLoading;
+
   return (
     <div className="space-y-4">
       {data.length > 0 && (
         <div className="flex justify-end gap-3 mb-4">
           <button
-            disabled={csvLoading}
+            disabled={exporting}
             onClick={handleCSVExport}
             className="
               px-5
@@ -74,7 +76,7 @@ export default function ResultTable({
           </button>
 
           <button
-            disabled={pdfLoading}
+            disabled={exporting}
             onClick={handlePDFExport}
             className="
               px-5
