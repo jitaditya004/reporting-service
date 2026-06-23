@@ -39,7 +39,7 @@ public class StudentController {
 
                     .header(
                         "Content-Disposition",
-                        "attachment; filename=students.csv"
+                        "attachment; filename=students_report.csv"
                     )
 
 
@@ -75,7 +75,7 @@ public class StudentController {
 
                     .header(
                         "Content-Disposition",
-                        "attachment; filename=students.pdf"
+                        "attachment; filename=students_report.pdf"
                     )
 
 

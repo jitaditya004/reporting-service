@@ -143,7 +143,7 @@ export default function StudentMIS() {
     return (
       <div
         className="
-            h-screen
+            min-h-[calc(100dvh-4rem)]
             flex
             flex-col
             items-center
