@@ -64,7 +64,7 @@ export default function StudentMIS() {
       try {
         setLoadingReport(true);
 
-        const data = await getReport(3);
+        const data = await getReport(1);
 
         setReport({
           reportId: data.reportId,
