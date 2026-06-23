@@ -404,13 +404,23 @@ export default function Pagination({
       className="
         flex flex-col sm:flex-row
         items-center justify-between
-        gap-4
+
+        gap-5
         mt-6
-        px-5 py-4
-        bg-gray-900
-        rounded-xl
-        shadow-lg
-        border border-gray-700
+
+        px-6
+        py-4
+
+        rounded-2xl
+
+        bg-white/5
+        backdrop-blur-xl
+
+        border
+        border-white/10
+
+        shadow-2xl
+        shadow-black/20
       "
     >
       <div className="flex items-center gap-2">
@@ -418,34 +428,52 @@ export default function Pagination({
           disabled={page === 0}
           onClick={() => onPageChange(page - 1)}
           className="
-            px-4 py-2
-            rounded-lg
-            bg-gray-800
-            border border-gray-600
+            px-4
+            py-2
+
+            rounded-xl
+
+            bg-gray-900/80
+            hover:bg-gray-800
+
+            border
+            border-white/10
+
             text-gray-200
-            text-sm font-medium
+            text-sm
+            font-medium
 
-            hover:bg-gray-700
+            shadow-md
+            shadow-black/20
 
-            disabled:bg-gray-900
-            disabled:text-gray-600
-            disabled:border-gray-800
+            transition-all
+            duration-200
+
+            hover:-translate-y-0.5
+
+            disabled:opacity-40
+            disabled:hover:translate-y-0
             disabled:cursor-not-allowed
-
-            transition
           "
         >
           Prev
         </button>
 
-        <div className="flex gap-1">
+        <div
+          className="
+            flex
+            gap-2
+            flex-wrap
+            justify-center
+          "
+        >
           {getPages().map((num, index) =>
             num === "..." ? (
               <span
                 key={`dots-${index}`}
                 className="
                   px-3 py-2
-                  text-gray-400
+                  text-gray-500
                 "
               >
                 ...
@@ -455,25 +483,42 @@ export default function Pagination({
                 key={`page-${num}`}
                 onClick={() => onPageChange(num)}
                 className={`
-                  w-9 h-9
-                  rounded-lg
-                  text-sm font-semibold
-                  transition
+                    w-10
+                    h-10
 
-                  ${
-                    page === num
-                      ? `
-                        bg-blue-600
-                        text-white
-                        shadow-md
-                      `
-                      : `
-                        bg-gray-800
-                        text-gray-300
-                        hover:bg-gray-700
-                      `
-                  }
-                `}
+                    rounded-xl
+
+                    text-sm
+                    font-semibold
+
+                    transition-all
+                    duration-200
+
+                    ${
+                      page === num
+                        ? `
+                          bg-blue-600
+                          text-white
+
+                          shadow-lg
+                          shadow-blue-600/30
+
+                          scale-105
+                        `
+                        : `
+                          bg-gray-900/70
+
+                          border
+                          border-white/10
+
+                          text-gray-300
+
+                          hover:bg-gray-800
+                          hover:text-white
+                          hover:-translate-y-0.5
+                        `
+                    }
+                  `}
               >
                 {num + 1}
               </button>
@@ -486,21 +531,32 @@ export default function Pagination({
           disabled={page === totalPages - 1}
           onClick={() => onPageChange(page + 1)}
           className="
-            px-4 py-2
-            rounded-lg
-            bg-gray-800
-            border border-gray-600
+            px-4
+            py-2
+
+            rounded-xl
+
+            bg-gray-900/80
+            hover:bg-gray-800
+
+            border
+            border-white/10
+
             text-gray-200
-            text-sm font-medium
+            text-sm
+            font-medium
 
-            hover:bg-gray-700
+            shadow-md
+            shadow-black/20
 
-            disabled:bg-gray-900
-            disabled:text-gray-600
-            disabled:border-gray-800
+            transition-all
+            duration-200
+
+            hover:-translate-y-0.5
+
+            disabled:opacity-40
+            disabled:hover:translate-y-0
             disabled:cursor-not-allowed
-
-            transition
           "
         >
           Next
@@ -509,9 +565,13 @@ export default function Pagination({
 
       <div
         className="
-          flex items-center
+          flex
+          items-center
+
           gap-3
-          text-sm text-gray-300
+
+          text-sm
+          text-gray-300
         "
       >
         <span>Rows:</span>
@@ -522,20 +582,29 @@ export default function Pagination({
           value={size}
           onChange={(e) => onSizeChange(Number(e.target.value))}
           className="
-            px-4 py-2
-            rounded-lg
+            px-4
+            py-2
 
-            bg-gray-800
+            rounded-xl
 
-            border border-gray-600
+            bg-gray-900/80
+
+            border
+            border-white/10
 
             text-gray-200
 
             cursor-pointer
 
-            focus:outline-none
+            outline-none
+
+            transition-all
+            duration-200
+
+            hover:border-blue-500/40
+
             focus:ring-2
-            focus:ring-blue-500
+            focus:ring-blue-500/30
           "
         >
           <option value={5}>5</option>

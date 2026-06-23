@@ -39,18 +39,35 @@ export default function ResultTable({
   }
 
   return (
-    <div>
+    <div className="space-y-4">
       {data.length > 0 && (
         <div className="flex justify-end gap-3 mb-4">
           <button
             disabled={csvLoading}
             onClick={handleCSVExport}
             className="
-              px-4 py-2
+              px-5
+              py-2.5
+
               rounded-xl
-              bg-green-600 hover:bg-green-700
-              text-white font-medium
-              transition
+
+              bg-green-600
+              hover:bg-green-500
+
+              text-white
+              text-sm
+              font-semibold
+
+              shadow-lg
+              shadow-green-600/20
+
+              transition-all
+              duration-200
+
+              hover:-translate-y-0.5
+
+              disabled:opacity-50
+              disabled:cursor-not-allowed
             "
           >
             {csvLoading ? "Exporting..." : "Export CSV"}
@@ -60,11 +77,28 @@ export default function ResultTable({
             disabled={pdfLoading}
             onClick={handlePDFExport}
             className="
-              px-4 py-2
+              px-5
+              py-2.5
+
               rounded-xl
-              bg-red-600 hover:bg-red-700
-              text-white font-medium
-              transition
+
+              bg-red-600
+              hover:bg-red-500
+
+              text-white
+              text-sm
+              font-semibold
+
+              shadow-lg
+              shadow-red-600/20
+
+              transition-all
+              duration-200
+
+              hover:-translate-y-0.5
+
+              disabled:opacity-50
+              disabled:cursor-not-allowed
             "
           >
             {pdfLoading ? "Exporting..." : "Export PDF"}
@@ -74,18 +108,35 @@ export default function ResultTable({
 
       <div
         className="
-          max-h-[90vh] overflow-auto
+          max-h-[90vh]
+          overflow-auto
+
           rounded-3xl
-          border border-white/10
+
           bg-white/5
+          backdrop-blur-xl
+
+          border
+          border-white/10
+
+          shadow-2xl
+          shadow-black/20
         "
       >
         <table className="w-full min-w-max text-left">
           <thead
             className="
-              sticky top-0 z-10
-              bg-gray-900
+              
+              top-0
+              z-10
+
+              bg-gray-950/95
+              backdrop-blur
+
               text-gray-400
+
+              border-b
+              border-white/10
             "
           >
             <tr>
@@ -93,8 +144,15 @@ export default function ResultTable({
                 <th
                   key={column.column}
                   className="
-                    px-6 py-4
+                    px-6
+                    py-4
+
                     whitespace-nowrap
+
+                    text-xs
+                    uppercase
+                    tracking-wider
+                    font-semibold
                   "
                 >
                   {column.label}
@@ -108,16 +166,24 @@ export default function ResultTable({
               <tr
                 key={index}
                 className="
-                  border-t border-white/5
-                  hover:bg-white/5
+                  border-t
+                  border-white/5
+
+                  transition
+
+                  hover:bg-white/10
                 "
               >
                 {columns.map((column) => (
                   <td
                     key={column.column}
                     className="
-                      px-6 py-4
+                      px-6
+                      py-4
+
                       whitespace-nowrap
+
+                      text-sm
                       text-gray-200
                     "
                   >

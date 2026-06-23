@@ -693,3 +693,142 @@ VALUES
 
 
 
+
+
+
+
+INSERT INTO student
+(
+    student_roll_no,
+    student_name,
+    department_id,
+    semester,
+    admission_datetime
+)
+SELECT
+    'AUTO' || LPAD(num::text, 5, '0'),
+
+    (ARRAY[
+        'Rahul Sharma',
+        'Amit Verma',
+        'Priya Das',
+        'Sneha Roy',
+        'Arjun Mehta',
+        'Riya Sen',
+        'Karan Gupta',
+        'Ananya Bose',
+        'Vikram Singh',
+        'Neha Kapoor',
+        'Aditya Rao',
+        'Ishita Nair',
+        'Rohan Das',
+        'Pooja Sen',
+        'Varun Mishra',
+        'Tanvi Agarwal'
+    ])[floor(random() * 16 + 1)],
+
+    floor(random() * 8 + 1)::int,
+
+    floor(random() * 8 + 1)::int,
+
+    timestamp '2025-01-01'
+        + random() * 
+        (timestamp '2026-06-20' - timestamp '2025-01-01')
+
+FROM generate_series(1,1000) num;
+
+
+
+
+
+INSERT INTO student_course
+(
+    student_id,
+    course_id,
+    marks,
+    attendance_percentage
+)
+SELECT
+    s.student_id,
+
+    (
+        SELECT c.course_id
+        FROM course c
+        WHERE c.department_id = s.department_id
+        ORDER BY random()
+        LIMIT 1
+    ),
+
+    floor(random() * 41 + 60)::int,
+
+    floor(random() * 31 + 70)::int
+
+FROM student s
+WHERE s.student_roll_no LIKE 'AUTO%';
+
+
+
+
+
+
+
+
+
+INSERT INTO student
+(
+    student_roll_no,
+    student_name,
+    department_id,
+    semester,
+    admission_datetime
+)
+SELECT
+    'AUTO' || LPAD(num::text, 5, '0'),
+
+    (ARRAY[
+        'Rohan Das',
+        'Pooja Sen',
+        'Varun Mishra',
+        'Tanvi Agarwal',
+        'Sahil Khan',
+        'Meera Joshi',
+        'Dev Patel',
+        'Nisha Roy',
+        'Aarav Gupta',
+        'Diya Sharma'
+    ])[floor(random() * 10 + 1)],
+
+    floor(random() * 8 + 1)::int,
+
+    floor(random() * 8 + 1)::int,
+
+    timestamp '2025-01-01'
+        + random() *
+        (timestamp '2026-06-20' - timestamp '2025-01-01')
+
+FROM generate_series(1001,2000) num;
+
+
+
+
+INSERT INTO student_course
+(
+    student_id,
+    course_id,
+    marks,
+    attendance_percentage
+)
+SELECT
+    s.student_id,
+    c.course_id,
+
+    floor(random() * 41 + 60)::int,
+
+    floor(random() * 31 + 70)::int
+
+FROM student s
+
+JOIN course c
+ON c.department_id = s.department_id
+
+WHERE s.student_roll_no BETWEEN 'AUTO01001' AND 'AUTO02000';

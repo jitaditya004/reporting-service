@@ -199,43 +199,70 @@ export default function StudentMIS() {
         <div className="rounded-lg bg-red-500/10 p-3 text-red-500">{error}</div>
       )}
 
-      {loading ? (
-        <div
-          className="
-          flex
-          justify-center
-          py-20
-          text-gray-400
-        "
-        >
-          Loading students...
-        </div>
-      ) : (
-        <ResultTable
-          columns={report.output_columns}
-          data={data}
-          onExportCSV={() => exportStudentCSV(filters)}
-          onExportPDF={() => exportStudentPDF(filters)}
-        />
-      )}
+      <>
+        {loading && (
+          <div
+            className="
+              fixed
+              top-6
+              left-1/2
+              -translate-x-1/2
 
-      <Pagination
-        page={page}
-        size={size}
-        totalPages={totalPages}
-        onPageChange={(p) => {
-          setPage(p);
+              z-50
 
-          handleSearch(p, size);
-        }}
-        onSizeChange={(newSize) => {
-          setSize(newSize);
+              px-5
+              py-2
 
-          setPage(0);
+              rounded-full
 
-          handleSearch(0, newSize);
-        }}
-      />
+              bg-gray-900/90
+              backdrop-blur-xl
+
+              border
+              border-white/10
+
+              text-sm
+              text-gray-200
+
+              shadow-xl
+              shadow-black/30
+
+              animate-pulse
+            "
+          >
+            Updating students...
+          </div>
+        )}
+
+        {data.length > 0 && (
+          <>
+            <ResultTable
+              columns={report.output_columns}
+              data={data}
+              onExportCSV={() => exportStudentCSV(filters)}
+              onExportPDF={() => exportStudentPDF(filters)}
+            />
+
+            <Pagination
+              page={page}
+              size={size}
+              totalPages={totalPages}
+              onPageChange={(p) => {
+                setPage(p);
+
+                handleSearch(p, size);
+              }}
+              onSizeChange={(newSize) => {
+                setSize(newSize);
+
+                setPage(0);
+
+                handleSearch(0, newSize);
+              }}
+            />
+          </>
+        )}
+      </>
     </div>
   );
 }
