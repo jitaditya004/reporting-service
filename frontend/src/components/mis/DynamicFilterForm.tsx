@@ -34,6 +34,8 @@ export default function DynamicFilterForm({
     });
   }
 
+  console.log(filters, "======", config);
+
   return (
     <div
       className="
@@ -60,7 +62,7 @@ export default function DynamicFilterForm({
           text-white
         "
         >
-          Student MIS
+          {config.reportName}
         </h2>
 
         <p
@@ -70,7 +72,7 @@ export default function DynamicFilterForm({
           mt-1
         "
         >
-          Configure filters and generate reports
+          Using Report Configuration {config.reportId}
         </p>
       </div>
 

@@ -230,7 +230,7 @@ export default function StudentMIS() {
               animate-pulse
             "
           >
-            Updating students...
+            Loading students data...
           </div>
         )}
 
